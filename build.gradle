@@ -11,6 +11,19 @@ dependencies {
 
 }
 
-task hello {
-    println 'hello, world'
+defaultTasks 'download'
+
+task download {
+    doFirst {
+        mkdir project.buildDir
+    }
+
+    doLast {
+        def url = 'https://github.com/jmeter-gradle-plugin/jmeter-gradle-plugin/archive/1.0.3.zip'
+        def outputDir = "${buildDir}"
+        //def outputDir = new File(".").absolutePath
+
+        ant.get(src: url, dest: outputDir, skipexisting: true, verbose: true)
+        //ant.unzip(src: 'somedir' + '/file.zip', dest: 'unpackdir')
+    }
 }
