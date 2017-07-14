@@ -1,29 +1,41 @@
-// Apply the java plugin to add support for Java
-//apply plugin: 'java'
-
-// In this section you declare where to find the dependencies of your project
 repositories {
     jcenter()
 }
 
-// In this section you declare the dependencies for your production and test code
 dependencies {
 
 }
 
-defaultTasks 'download'
+defaultTasks 'clear', 'unzip'
+
+def outputDir = "${buildDir}"
+def unpackDir = "${outputDir}/unpack"
+
+task clear {
+    doFirst {
+        delete project.buildDir
+    }
+}
 
 task download {
     doFirst {
         mkdir project.buildDir
     }
-
     doLast {
         def url = 'https://github.com/jmeter-gradle-plugin/jmeter-gradle-plugin/archive/1.0.3.zip'
-        def outputDir = "${buildDir}"
-        //def outputDir = new File(".").absolutePath
 
         ant.get(src: url, dest: outputDir, skipexisting: true, verbose: true)
-        //ant.unzip(src: 'somedir' + '/file.zip', dest: 'unpackdir')
     }
+}
+
+task unzip(dependsOn: 'download') {
+    doLast {
+        ant.unzip(src: outputDir + '/1.0.3.zip', dest: unpackDir)
+    }
+}
+
+task build(dependsOn: 'unzip') {
+//    doLast {
+//        tasks.unzip.execute()
+//    }
 }
