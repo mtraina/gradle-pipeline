@@ -6,7 +6,7 @@ dependencies {
 
 }
 
-defaultTasks 'clear', 'unzip'
+defaultTasks 'clear', 'print'
 
 def outputDir = "${buildDir}"
 def unpackDir = "${outputDir}/unpack"
@@ -28,15 +28,21 @@ task download {
     }
 }
 
-task unzip(dependsOn: 'download') {
+task copyArchive(type: Copy) {
+    from 'data/archive.zip'
+    into outputDir
+}
+
+task unzip(dependsOn: 'copyArchive') {
     doLast {
-        ant.unzip(src: outputDir + '/1.0.3.zip', dest: unpackDir)
+        //ant.unzip(src: outputDir + '/1.0.3.zip', dest: unpackDir)
+        ant.unzip(src: outputDir + '/archive.zip', dest: unpackDir)
     }
 }
 
 task print(dependsOn: 'unzip'){
     doLast {
-        new File(unpackDir).eachFileRecurse { e -> println e.getName() }
+        new File(unpackDir).eachFile { e -> println e.getName() }
     }
 }
 
