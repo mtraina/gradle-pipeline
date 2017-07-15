@@ -34,7 +34,13 @@ task unzip(dependsOn: 'download') {
     }
 }
 
-task build(dependsOn: 'unzip') {
+task print(dependsOn: 'unzip'){
+    doLast {
+        new File(unpackDir).eachFileRecurse { e -> println e.getName() }
+    }
+}
+
+task build(dependsOn: 'print') {
 //    doLast {
 //        tasks.unzip.execute()
 //    }
