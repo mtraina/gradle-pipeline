@@ -6,7 +6,7 @@ dependencies {
 
 }
 
-defaultTasks 'clear', 'print'
+defaultTasks 'clear', 'deliver'
 
 def outputDir = "${buildDir}"
 def unpackDir = "${outputDir}/unpack"
@@ -43,6 +43,16 @@ task unzip(dependsOn: 'copyArchive') {
 task print(dependsOn: 'unzip'){
     doLast {
         new File(unpackDir).eachFile { e -> println e.getName() }
+    }
+}
+
+task deliver(dependsOn: 'unzip'){
+
+    doFirst {
+
+    }
+    doLast {
+        println "curl -i -X GET -H \"Content-Type: application/json\" https://api.twitter.com/1.1/search/tweets.json?q=%40twitterapi".execute().text
     }
 }
 
